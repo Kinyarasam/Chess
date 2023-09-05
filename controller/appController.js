@@ -8,4 +8,4 @@ class appController {
   }
 }
 
-export default appController
+export default appController;

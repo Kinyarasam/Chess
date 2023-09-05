@@ -11,7 +11,7 @@ const app = express();
 const PORT = process.env.PORT;
 
 /* Middlewares */
-app.use(express.json());
+// app.use(express.json());
 app.use(router);
 
 app.listen(PORT, () => {
