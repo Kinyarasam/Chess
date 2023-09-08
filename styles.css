@@ -1,0 +1,51 @@
+/* Apply basic styling to the chessboard container */
+#chessboard {
+  display: grid;
+  grid-template-columns: repeat(8, 50px); /* 8 columns with equal width */
+  grid-template-rows: repeat(8, 50px); /* 8 rows with equal height */
+  width: 400px; /* Adjust the chessboard width as needed */
+  height: 400px; /* Adjust the chessboard height as needed */
+  border: 1px solid #333; /* Add a border to the chessboard */
+}
+
+/* Style the individual squares with alternating colors */
+.square {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+/* Style the colors of the chessboard squares */
+.light {
+  background-color: #f0d9b5; /* Light color for odd rows */
+}
+
+.dark {
+  background-color: #b58863; /* Dark color for even rows */
+}
+
+/* Customize the appearance of chess pieces (you can use Unicode chess symbols) */
+.piece {
+  font-family: 'Arial', sans-serif;
+  font-size: 48px;
+}
+
+/* Additional styling for game information, buttons, or other UI elements */
+#game-info {
+  margin-top: 10px;
+}
+
+#new-game-button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#new-game-button:hover {
+  background-color: #45a049;
+}
