@@ -294,7 +294,7 @@ const movePiece = (piece, newRow, newCol) => {
   // if (movedPiece) {
   //   originalSquare.removeChild(movedPiece); // Remove the specific span element
   // }
-  piece.textContent = ''
+  piece.textContent = '';
   // piece.remove(piece.querySelector('piece'))
   console.log(piece)
   // originalSquare.querySelector('.piece').textContent = ' ';
