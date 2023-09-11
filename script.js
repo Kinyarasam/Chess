@@ -141,10 +141,11 @@ const handleSquareClick = (event) => {
     }
   } else {
     if (!SELECTEDPIECES) return
-    console.log('hit')
   
     if (isValidMove(SELECTEDPIECES, row, col)) {
       movePiece(SELECTEDPIECES, row, col)
+      // Update the current player (switch between white and black)
+      CURRENT_PLAYER = CURRENT_PLAYER === 'white' ? 'black' : 'white'
     }
   }
 };
@@ -265,47 +266,19 @@ function isValidMove(piece, row, col) {
 
 // Define a function to move a piece to a specific row and column
 const movePiece = (piece, newRow, newCol) => {
-  // Get the current row and column of the selected piece
-  const currentRow = parseInt(piece.dataset.row);
-  const currentCol = parseInt(piece.dataset.col);
+  // Get the destination square
+  const destinationSquare = document.querySelector(`[data-row="${newRow}"][data-col="${newCol}"]`)
+  const newDestination = document.createElement('span')
+  newDestination.classList.add('piece')
 
-  // Update the data attributes of the piece to its new position
-  piece.dataset.row = newRow;
-  piece.dataset.col = newCol;
+  // move the piece to the new square
+  newDestination.textContent = SELECTEDPIECES.textContent 
+  destinationSquare.appendChild(newDestination)
 
-  // Move the piece to the new square
-  const targetSquare = document.querySelector(`[data-row="${newRow}"][data-col="${newCol}"]`);
-  // if (targetSquare.childNodes.length === 0) {
-  const chessboard = document.getElementById('chessboard');
-  const newPiece = document.createElement('span')
-  newPiece.className = 'piece'
-  newPiece.textContent = piece.textContent; // Set the content of the new piece
-  targetSquare.appendChild(newPiece);
-  // }
-
-  const targetSquare1 = document.querySelector(`[data-row="${newRow}"][data-col="${newCol}"]`);
-  console.log(targetSquare)
-  // targetSquare.querySelector('.piece').textContent = piece.textContent;
-  // console.log('Position updated');
-  
-  // // Clear the content of the moved piece from its original position
-  const originalSquare = document.querySelector(`[data-row="${currentRow}"][data-col="${currentCol}"]`);
-  // const movedPiece = originalSquare.querySelector('span'); // Get the specific span element
-  // if (movedPiece) {
-  //   originalSquare.removeChild(movedPiece); // Remove the specific span element
-  // }
-  piece.textContent = '';
-  // piece.remove(piece.querySelector('piece'))
-  console.log(piece)
-  // originalSquare.querySelector('.piece').textContent = ' ';
-  // originalSquare.querySelector('.piece').dataset.moved = 'true'; // Mark the original square as moved
-
-  // // Clear the content of the moved piece.
-  // piece.textContent = ' ';
-  // SELECTEDPIECES = null;
-
-  // // Update the current player (switch between white and black)
-  CURRENT_PLAYER = CURRENT_PLAYER === 'white' ? 'black' : 'white';
+  // Clear the content of the moved piece.
+  SELECTEDPIECES.textContent = '';
+  SELECTEDPIECES.classList.remove('selected')
+  SELECTEDPIECES = null;
 };
 
 // Initialize the chessboard when the page loads
