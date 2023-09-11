@@ -161,19 +161,6 @@ class gameController {
     }
   }
 
-  // Function to get the piece at a specific row and column on the chessboard
-  static getPieceAt(row, col) {
-    const chessboard = document.getElementById('chessboard');
-    const square = chessboard.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-    const pieceElement = square.querySelector('.piece');
-
-    if (pieceElement) {
-      return gameController.getPieceSymbol(pieceElement.textContent);
-    }
-
-    return null; // No piece found
-  }
-
   // Define a function to check if a move is valid for the selected piece
   static isValidMove(piece, row, col) {
     // Get the piece type (e.g., '♙' for white pawn)
