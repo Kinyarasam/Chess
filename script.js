@@ -26,11 +26,13 @@ const initializeChessboard = () => {
     for (let col = 0; col < 8; col++) {
       const square = document.createElement('div');
       square.className = 'square'
-      if ((row + col) % 2 == 0) {
-        square.classList.add('light');
+
+      if ((row + col) % 2 === 0) {
+        square.classList.add('light')
       } else {
         square.classList.add('dark');
       }
+
       const piece = document.createElement('span');
 
       square.dataset.row = row;
@@ -128,6 +130,7 @@ const handleSquareClick = (event) => {
         }
       } else {
         console.log('Select one of your pieces');
+        // Check for a valid Capture.
       }
     } else {
       if (SELECTEDPIECES) {
@@ -251,7 +254,20 @@ const isValidKingMove = (piece, row, col) => {
 };
 
 // Define a function to check if a move is valid for a queen.
-const isValidQueenMove = (piece, row, col) => {};
+const isValidQueenMove = (piece, row, col) => {
+  const selectedRow = parseInt(piece.dataset.row);
+  const selectedCol = parseInt(piece.dataset.col);
+  const rowDiff = Math.abs(row - selectedRow);
+  const colDiff = Math.abs(col - selectedCol);
+
+  if (row === selectedRow || col === selectedCol || rowDiff === colDiff) {
+    // Valid move: Horizontal, vertical, or diagonal movement
+    return true;
+  } else {
+    // Invalid move
+    return false;
+  }
+};
 
 // Define a function to check if a move is valid for the selected piece
 const isValidMove = (piece, row, col) => {
