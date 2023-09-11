@@ -159,38 +159,24 @@ const isPieceMoved = (square) => {
 
 // Define a function to check if a move is valid for a pawn
 const isValidPawnMove = (piece, row, col) => {
-  
-    const selectedRow = parseInt(piece.dataset.row);
-    const selectedCol = parseInt(piece.dataset.col);
-    const rowDiff = row - selectedRow; // Calculate the row difference without taking absolute value
-    const colDiff = Math.abs(col - selectedCol);
+  const selectedRow = parseInt(piece.dataset.row);
+  const selectedCol = parseInt(piece.dataset.col);
+  const rowDiff = Math.abs(row - selectedRow);
+  const colDiff = Math.abs(col - selectedCol);
 
-    // Determine the valid move conditions based on the piece's color (white or black)
-    if (piece.textContent === '♙') { // White pawn
-      if (rowDiff === -1 && colDiff === 0) {
-        // Valid move: Move one square forward
-        return true;
-      } else if (selectedRow === 1 && rowDiff === -2 && colDiff === 0) {
-        // Valid move for white pawn: Move two squares forward from starting position
-        return true;
-      } else {
-        // Invalid move
-        return false;
-      }
-    } else if (piece.textContent === '♟') { // Black pawn
-      if (rowDiff === 1 && colDiff === 0) {
-        // Valid move: Move one square backward
-        return true;
-      } else if (selectedRow === 6 && rowDiff === 2 && colDiff === 0) {
-        // Valid move for black pawn: Move two squares backward from starting position
-        return true;
-      } else {
-        // Invalid move
-        return false;
-      }
-    }
-  // If the piece is not recognized as either a white or black pawn, it's an invalid move
-  return false;
+  if (rowDiff === 1 && colDiff === 0) {
+    // Valid move: Move one square forward
+    return true;
+  } else if (selectedRow === 1 && row === 3 && colDiff === 0) {
+    // Valid move for white pawn: Move two squares forward from starting position
+    return true;
+  } else if (selectedRow === 6 && row === 4 && colDiff === 0) {
+    // Valid move for black pawn: Move two squares forward from starting position
+    return true;
+  } else {
+    // Invalid move
+    return false;
+  }
 }
 
 // Define a function to check if a move is valid for a rook
