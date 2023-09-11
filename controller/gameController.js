@@ -43,12 +43,12 @@ class gameController {
         const pieceSymbol = startingPosition[row * 8 + col];
         if (pieceSymbol) {
           piece.className = 'piece';
-          piece.textContent = this.getPieceUnicode(pieceSymbol);
+          piece.textContent = gameController.getPieceUnicode(pieceSymbol);
           square.appendChild(piece);
         }
   
         // Add event listeners for square clicks (to make moves)
-        square.addEventListener('click', this.handleSquareClick);
+        square.addEventListener('click', gameController.handleSquareClick);
   
         chessboard.appendChild(square);
       }
