@@ -161,26 +161,39 @@ const isPieceMoved = (square) => {
 const isValidPawnMove = (piece, row, col) => {
   const selectedRow = parseInt(piece.dataset.row);
   const selectedCol = parseInt(piece.dataset.col);
-  const rowDiff = Math.abs(row - selectedRow);
-  const colDiff = Math.abs(col - selectedCol);
+  const rowDiff = row - selectedRow;
+  const colDiff = col - selectedCol;
 
-  if (rowDiff === 1 && colDiff === 0) {
-    // Valid move: Move one square forward
-    return true;
-  } else if (selectedRow === 1 && row === 3 && colDiff === 0) {
-    // Valid move for white pawn: Move two squares forward from starting position
-    return true;
-  } else if (selectedRow === 6 && row === 4 && colDiff === 0) {
-    // Valid move for black pawn: Move two squares forward from starting position
-    return true;
+  if (piece.textContent === '♙') { // Move validations for the white pawn
+    if (rowDiff === -1 && colDiff === 0) {
+      // Valid move: Move one square forward.
+      return true
+    } else if (selectedRow === 6 && row === 4 && colDiff === 0) {
+      // Valid move for white pawn: Move two squares forward from starting position
+      return true;
+    } else {
+      // Invalid move
+      return false
+    }
+  } else if (piece.textContent === '♟') { // Move validations for the black pawn
+    if (rowDiff === 1 && colDiff === 0) {
+      // Valid move: Move one square forward.
+      return true
+    } else if (selectedRow === 1 && row === 3 && colDiff === 0) {
+      // Valid move for black pawn: Move two squares forward from starting position
+      return true;
+    } else {
+      // Invalid move
+      return false
+    }
   } else {
     // Invalid move
-    return false;
+    return false
   }
 }
 
 // Define a function to check if a move is valid for a rook
-function isValidRookMove(piece, row, col) {
+const isValidRookMove = (piece, row, col) => {
   const selectedRow = parseInt(piece.dataset.row);
   const selectedCol = parseInt(piece.dataset.col);
 
@@ -194,7 +207,7 @@ function isValidRookMove(piece, row, col) {
 }
 
 // Define a function to check if a move is valid for a knight
-function isValidKnightMove(piece, row, col) {
+const isValidKnightMove = (piece, row, col) => {
   const selectedRow = parseInt(piece.dataset.row);
   const selectedCol = parseInt(piece.dataset.col);
   const rowDiff = Math.abs(row - selectedRow);
@@ -210,7 +223,7 @@ function isValidKnightMove(piece, row, col) {
 }
 
 // Define a function to check if a move is valid for a bishop
-function isValidBishopMove(piece, row, col) {
+const isValidBishopMove = (piece, row, col) => {
   const selectedRow = parseInt(piece.dataset.row);
   const selectedCol = parseInt(piece.dataset.col);
   const rowDiff = Math.abs(row - selectedRow);
@@ -225,8 +238,23 @@ function isValidBishopMove(piece, row, col) {
   }
 }
 
+// Define a function to check if a move is valid for a king
+const isValidKingMove = (piece, row, col) => {
+  const selectedRow = parseInt(piece.dataset.row);
+  const selectedCol = parseInt(piece.dataset.col);
+  const rowDiff = Math.abs(row - selectedRow);
+  const colDiff = Math.abs(col - selectedCol);
+
+  if ((Math.abs(rowDiff) === 1) || Math.abs(colDiff) === 1) 
+    return true
+  return false
+};
+
+// Define a function to check if a move is valid for a queen.
+const isValidQueenMove = (piece, row, col) => {};
+
 // Define a function to check if a move is valid for the selected piece
-function isValidMove(piece, row, col) {
+const isValidMove = (piece, row, col) => {
   // Get the piece type (e.g., '♙' for white pawn)
   const pieceType = piece.textContent;
   console.log(pieceType)
@@ -244,6 +272,12 @@ function isValidMove(piece, row, col) {
     case '♗':
     case '♝':
       return isValidBishopMove(piece, row, col);
+    case '♕':
+    case '♛':
+      return isValidQueenMove(piece, row, col)
+    case '♔':
+    case '♚':
+      return isValidKingMove(piece, row, col)
     default:
       // Invalid move for other piece types (e.g., king, queen)
       return false;
