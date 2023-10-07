@@ -76,44 +76,15 @@ class gameController {
 
     // Check if the clicked square contains a piece of the current player
     const piece = gameController.getPieceAt(row, col);
+    console.log(piece)
 
-    if (piece) {
-      // Check if the clicked piece belongs to the current player
-      const pieceColor = piece.split('.')[0];
-      if (PIECE_COLORS.includes(pieceColor)) {
-        if (pieceColor === CURRENT_PLAYER) {
-          // Check if the piece has already been moved (previously marked as moved)
-          if (!gameController.isPieceMoved(clickedSquare)) {
-            // Highlight the selected piece
-            if (SELECTEDPIECES) {
-              SELECTEDPIECES.classList.remove('selected');
-            }
-            SELECTEDPIECES = clickedSquare;
-            SELECTEDPIECES.classList.add('selected');
-          } else {
-            console.log('This piece has already been moved');
-          }
-        } else {
-          console.log('Select one of your pieces');
-          // Check for a valid Capture.
-        }
-      } else {
-        if (SELECTEDPIECES) {
-          if (gameController.isValidMove(SELECTEDPIECES, row, col)) {
-            gameController.movePiece(SELECTEDPIECES, row, col);
-          } else {
-            // Handle invalid move
-            console.log('Invalid move');
-          }
-        }
-      }
+    if (SELECTEDPIECES) {
+      ///
     } else {
-      if (!SELECTEDPIECES) return
-    
-      if (gameController.isValidMove(SELECTEDPIECES, row, col)) {
-        gameController.movePiece(SELECTEDPIECES, row, col)
-        // Update the current player (switch between white and black)
-        CURRENT_PLAYER = CURRENT_PLAYER === 'white' ? 'black' : 'white'
+      if (piece && piece.split('.')[0] === CURRENT_PLAYER) {
+        gameController.selectSquare(clickedSquare, row, col);
+      } else {
+        console.log(false)
       }
     }
   }
@@ -165,7 +136,7 @@ class gameController {
   static isValidMove(piece, row, col) {
     // Get the piece type (e.g., '♙' for white pawn)
     const pieceType = piece.textContent;
-    console.log(pieceType)
+    // console.log(pieceType)
 
     switch (pieceType) {
       case '♙':
@@ -199,16 +170,25 @@ class gameController {
     const rowDiff = row - selectedRow;
     const colDiff = col - selectedCol;
 
+    console.log(rowDiff, colDiff)
+    console.log(gameController.canCapturePiece(piece, row, col))
+
     if (piece.textContent === '♙') { // Move validations for the white pawn
-      if (rowDiff === -1 && colDiff === 0) {
-        // Valid move: Move one square forward.
-        return true
-      } else if (selectedRow === 6 && row === 4 && colDiff === 0) {
-        // Valid move for white pawn: Move two squares forward from starting position
-        return true;
+      if (gameController.canCapturePiece(piece, row, col)) {
+        if (rowDiff === -1 && Math.abs(colDiff) === 1) {
+          return true
+        }
       } else {
-        // Invalid move
-        return false
+        if (rowDiff === -1 && colDiff === 0) {
+          // Valid move: Move one square forward.
+          return true
+        } else if (selectedRow === 6 && row === 4 && colDiff === 0) {
+          // Valid move for white pawn: Move two squares forward from starting position
+          return true;
+        } else {
+          // Invalid move
+          return false
+        }
       }
     } else if (piece.textContent === '♟') { // Move validations for the black pawn
       if (rowDiff === 1 && colDiff === 0) {
@@ -302,7 +282,6 @@ class gameController {
     }
   }
 
-
   // Define a function to move a piece to a specific row and column
   static movePiece(piece, newRow, newCol) {
     // Get the destination square
@@ -318,7 +297,92 @@ class gameController {
     SELECTEDPIECES.textContent = '';
     SELECTEDPIECES.classList.remove('selected')
     SELECTEDPIECES = null;
+
+    // Update the current player (switch between white and black)
+    CURRENT_PLAYER = CURRENT_PLAYER === 'white' ? 'black' : 'white'
   };
+
+  static canCapturePiece(piece, row, col) {
+    const targetPiece = piece
+    // console.log(piece, SELECTEDPIECES)
+
+    // console.log(targetPiece)
+
+    if (targetPiece) {
+      const targetColor = gameController.getPieceSymbol(targetPiece.textContent).split('.')[0]
+      const pieceColor = gameController.getPieceSymbol(SELECTEDPIECES.textContent).split('.')[0];
+
+      // console.log(targetColor, pieceColor)
+      // A piece can capture another piece if they have different colors (opponents)
+      return targetColor !== pieceColor;
+    }
+
+    return false; // No piece to capture
+  }
 }
 
 // export default gameController;
+
+
+
+// if (piece) {
+//   // Check if the clicked piece belongs to the current player
+//   const pieceColor = piece.split('.')[0];
+//   if (PIECE_COLORS.includes(pieceColor)) {
+//     if (pieceColor === CURRENT_PLAYER) {
+//       // Check if the piece has already been moved (previously marked as moved)
+//       if (!gameController.isPieceMoved(clickedSquare)) {
+//         // Highlight the selected piece
+//         if (SELECTEDPIECES) {
+//           SELECTEDPIECES.classList.remove('selected');
+//         }
+//         SELECTEDPIECES = clickedSquare;
+//         SELECTEDPIECES.classList.add('selected');
+//       } else {
+//         console.log('This piece has already been moved');
+//       }
+//     } else {
+//       // Check for a valid Capture.
+//       if (SELECTEDPIECES !== null) {
+//         console.log('Check for posible capture');
+//         console.log(SELECTEDPIECES)
+//         console.log(piece)
+//         console.log('can capture', gameController.canCapturePiece(piece, row, col));
+//         console.log('can move',gameController.isValidMove(SELECTEDPIECES, row, col))
+
+//         // if (gameController.canCapturePiece(piece, row, col) && gameController.isValidMove(SELECTEDPIECES, row, col)) {
+//         //   // clear the targetsquare.
+//         //   const chessboard = document.getElementById('chessboard');
+//         //   const targetsquare = chessboard.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+//         //   targetsquare.textContent = '';
+          
+//         //   // console.log(piece)
+//         //   gameController.movePiece(piece, row, col);
+//         //   // SELECTEDPIECES = null;
+
+//         // } else {
+//         //   console.log('Invalid Move')
+//         // }
+//       } else {
+//         console.log('Select One of your Piece')
+//       }
+//     }
+//   } else {
+//     console.log('Here')
+//     // if (SELECTEDPIECES) {
+//     //   if (gameController.isValidMove(SELECTEDPIECES, row, col)) {
+//     //     gameController.movePiece(SELECTEDPIECES, row, col);
+//     //   } else {
+//     //     // Handle invalid move
+//     //     console.log('Invalid move');
+//     //   }
+//     // }
+//   }
+// } else {
+//   console.log('Check here')
+//   if (!SELECTEDPIECES) return
+
+//   if (gameController.isValidMove(SELECTEDPIECES, row, col)) {
+//     gameController.movePiece(SELECTEDPIECES, row, col)     
+//   }
+// }
