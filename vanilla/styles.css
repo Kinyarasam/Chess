@@ -1,11 +1,16 @@
 /* Apply basic styling to the chessboard container */
 #chessboard {
   display: grid;
-  grid-template-columns: repeat(8, 50px); /* 8 columns with equal width */
-  grid-template-rows: repeat(8, 50px); /* 8 rows with equal height */
-  width: 400px; /* Adjust the chessboard width as needed */
-  height: 400px; /* Adjust the chessboard height as needed */
-  border: 1px solid #333; /* Add a border to the chessboard */
+  grid-template-columns: repeat(8, 50px);
+  /* 8 columns with equal width */
+  grid-template-rows: repeat(8, 50px);
+  /* 8 rows with equal height */
+  width: 400px;
+  /* Adjust the chessboard width as needed */
+  height: 400px;
+  /* Adjust the chessboard height as needed */
+  border: 1px solid #333;
+  /* Add a border to the chessboard */
 }
 
 /* Style the individual squares with alternating colors */
@@ -20,11 +25,13 @@
 
 /* Style the colors of the chessboard squares */
 .light {
-  background-color: #f0d9b5; /* Light color for odd rows */
+  background-color: #f0d9b5;
+  /* Light color for odd rows */
 }
 
 .dark {
-  background-color: #b58863; /* Dark color for even rows */
+  background-color: #b58863;
+  /* Dark color for even rows */
 }
 
 /* Customize the appearance of chess pieces (you can use Unicode chess symbols) */
@@ -53,5 +60,10 @@
 
 .selected {
   background-color: #4CAF50;
-  border: 2px solid yellow; /* Add your desired style for selected pieces */
+  border: 2px solid yellow;
+}
+
+.sel {
+  background-color: #4CAF5070;
+  border: 2px solid yellow;
 }

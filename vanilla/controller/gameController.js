@@ -1,100 +1,50 @@
-#!/usr/bin/env node
+#!/usr/bin/env
+let CURRENT_PLAYER = 'white';
+let PIECE_COLORS = ['white', 'black']
+let SELECTED_SQUARE = null;
 
-// Define global variables for the current player and the selected piece
-let CURRENT_PLAYER = 'white'; // Set the initial player
-let SELECTEDPIECES = null; // Store the selected piece
-let PIECE_COLORS = ['black', 'white'];
-
-class gameController {
+class GameController {
   static initializeChessboard() {
-    console.log('loaded')
-    // Create the chessboard grid dynamically
-    const chessboard = document.getElementById('chessboard');
-  
-    // Define the starting position of pieces using letters (R = Rook, N = Knight, B = Bishop, Q = Queen, K = King, P = Pawn)
-    const startingPosition = [
+    const board = document.getElementById('chessboard');
+
+    const startPos = [
       'black.r', 'black.n', 'black.b', 'black.q', 'black.k', 'black.b', 'black.n', 'black.r', // Black back row
       'black.p', 'black.p', 'black.p', 'black.p', 'black.p', 'black.p', 'black.p', 'black.p', // Black pawns
-      '', '', '', '', '', '', '', '', // Empty rows
-      '', '', '', '', '', '', '', '', // Empty rows
-      '', '', '', '', '', '', '', '', // Empty rows
-      '', '', '', '', '', '', '', '', // Empty rows
+      null, null, null, null, null, null, null, null, // Empty rows
+      null, null, null, null, null, null, null, null, // Empty rows
+      null, null, null, null, null, null, null, null, // Empty rows
+      null, null, null, null, null, null, null, null, // Empty rows
       'white.P', 'white.P', 'white.P', 'white.P', 'white.P', 'white.P', 'white.P', 'white.P', // White pawns
       'white.R', 'white.N', 'white.B', 'white.Q', 'white.K', 'white.B', 'white.N', 'white.R', // White back row
-    ];
-  
+    ]
+
     for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 8; col++) {
         const square = document.createElement('div');
-        square.className = 'square'
-  
-        if ((row + col) % 2 === 0) {
-          square.classList.add('light')
-        } else {
-          square.classList.add('dark');
-        }
-  
-        const piece = document.createElement('span');
-  
+        square.className = 'square';
+
+        ((row + col) % 2 === 0) ? square.classList.add('light') : square.classList.add('dark')
+
+        const piece = document.createElement('span')
+        piece.className = 'piece';
+
         square.dataset.row = row;
         square.dataset.col = col;
-  
-        /// Initialize and display chess pieces
-        const pieceSymbol = startingPosition[row * 8 + col];
-        if (pieceSymbol) {
-          piece.className = 'piece';
-          piece.textContent = gameController.getPieceUnicode(pieceSymbol);
-          square.appendChild(piece);
+
+        // Initialize and display the chess pieces
+        const pieceText = startPos[row * 8 + col]
+
+        if (pieceText) {
+          piece.textContent = GameController.getPieceUnicode(pieceText);
         }
-  
-        // Add event listeners for square clicks (to make moves)
-        square.addEventListener('click', gameController.handleSquareClick);
-  
-        chessboard.appendChild(square);
+        square.appendChild(piece)
+
+        square.addEventListener('click', GameController.handleSquareClick);
+
+        board.appendChild(square)
       }
     }
   }
-
-   // Function to get the piece at a specific row and column on the chessboard
-  static getPieceAt(row, col) {
-    const chessboard = document.getElementById('chessboard');
-    const square = chessboard.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-    const pieceElement = square.querySelector('.piece');
-
-    if (pieceElement) {
-      return gameController.getPieceSymbol(pieceElement.textContent);
-    }
-
-    return null; // No piece found
-  }
-
-  //Define a function to handle square clicks (making moves)
-  static handleSquareClick(event) {
-    const clickedSquare = event.target;
-    const row = parseInt(clickedSquare.dataset.row);
-    const col = parseInt(clickedSquare.dataset.col);
-
-    // Check if the clicked square contains a piece of the current player
-    const piece = gameController.getPieceAt(row, col);
-    console.log(piece)
-
-    if (SELECTEDPIECES) {
-      ///
-    } else {
-      if (piece && piece.split('.')[0] === CURRENT_PLAYER) {
-        gameController.selectSquare(clickedSquare, row, col);
-      } else {
-        console.log(false)
-      }
-    }
-  }
-
-  // Function to check if a piece has already been moved
-  static isPieceMoved(square) {
-    const piece = square.querySelector('.piece');
-    return piece && piece.dataset.moved === 'true';
-  };
-
 
   static getPieceUnicode(letter) {
     switch (letter) {
@@ -110,279 +60,159 @@ class gameController {
       case 'white.Q': return '♕'; // White Queen
       case 'white.K': return '♔'; // White King
       case 'white.P': return '♙'; // White Pawn
-      default: return '';
+      default:
+        return null;
     }
   }
 
-  static getPieceSymbol(uniCode) {
+  static getPieceText(uniCode) {
     switch (uniCode) {
-      case  '♜': return 'black.r'; // Black Rook
-      case  '♞': return 'black.n'; // Black Knight
-      case  '♝': return 'black.b'; // Black Bishop
-      case  '♛': return 'black.q'; // Black Queen
-      case  '♚': return 'black.k'; // Black King
-      case  '♟': return 'black.p'; // Black Pawn
-      case  '♖': return 'white.R'; // White Rook
-      case  '♘': return 'white.N'; // White Knight
-      case  '♗': return 'white.B'; // White Bishop
-      case  '♕': return 'white.Q'; // White Queen
-      case  '♔': return 'white.K'; // White King
-      case  '♙': return 'white.P'; // White Pawn
-      default: return '';
+      case '♜': return 'black.r'; // Black Rook
+      case '♞': return 'black.n'; // Black Knight
+      case '♝': return 'black.b'; // Black Bishop
+      case '♛': return 'black.q'; // Black Queen
+      case '♚': return 'black.k'; // Black King
+      case '♟': return 'black.p'; // Black Pawn
+      case '♖': return 'white.R'; // White Rook
+      case '♘': return 'white.N'; // White Knight
+      case '♗': return 'white.B'; // White Bishop
+      case '♕': return 'white.Q'; // White Queen
+      case '♔': return 'white.K'; // White King
+      case '♙': return 'white.P'; // White Pawn
+      default:
+        return null;
     }
   }
 
-  // Define a function to check if a move is valid for the selected piece
-  static isValidMove(piece, row, col) {
-    // Get the piece type (e.g., '♙' for white pawn)
-    const pieceType = piece.textContent;
-    // console.log(pieceType)
+  static handleSquareClick() {
+    const clickedSquare = event.target;
 
-    switch (pieceType) {
+    const row = parseInt(clickedSquare.dataset.row)
+    const col = parseInt(clickedSquare.dataset.col)
+
+    if (Number.isNaN(row) || Number.isNaN(col)) {
+      alert('click again');
+      return
+    }
+
+    // Highlight the clicked square
+    GameController.highlightSquare(clickedSquare);
+
+    const piece = GameController.getPieceAt(clickedSquare, row, col);
+
+    if (piece && piece.split('.')[0] === CURRENT_PLAYER) {
+      GameController.selectSquare(clickedSquare, row, col);
+    } else {
+      if (!SELECTED_SQUARE) {
+        console.log('Select your piece color')
+      } else {
+        // Validate piece move
+
+        GameController.movePiece(clickedSquare, row, col)
+      }
+    }
+  }
+
+  static selectSquare(square) {
+    if (SELECTED_SQUARE) { SELECTED_SQUARE.classList.remove('sel') }
+    SELECTED_SQUARE = square
+
+    SELECTED_SQUARE.classList.add('sel')
+  }
+
+  static getPieceAt(square) {
+    return GameController.getPieceText(square.textContent);
+  }
+
+  static highlightSquare(square) {
+    const board = document.getElementById('chessboard');
+    const activeSquare = board.querySelector('.selected');
+
+    if (activeSquare) {
+      activeSquare.classList.remove('selected');
+    }
+    square.classList.add('selected')
+  }
+
+  static movePiece(square) {
+    const newLocation = square.querySelector('.square');
+    if (SELECTED_SQUARE === null) return;
+
+    const new_span = square.querySelector('span')
+    const update_span = SELECTED_SQUARE.querySelector('span')
+    const playerPiece = update_span.textContent
+    const enemy = new_span.textContent
+    console.log('enemy', enemy)
+
+    if (GameController.isValidMove(playerPiece)) {
+      GameController.move(update_span, new_span, playerPiece);
+
+      SELECTED_SQUARE.classList.remove('sel')
+      SELECTED_SQUARE = null
+    }
+  }
+
+  static move(initialPos, finalPos, piece) {
+    finalPos.textContent = piece
+    initialPos.textContent = null
+    CURRENT_PLAYER = CURRENT_PLAYER === 'white' ? 'black' : 'white'
+
+  }
+
+  static isValidMove(piece) {
+    switch (piece) {
       case '♙':
       case '♟':
-        return gameController.isValidPawnMove(piece, row, col);
+        return GameController.isValidPawnMove(piece);
       case '♖':
       case '♜':
-        return gameController.isValidRookMove(piece, row, col);
+        return GameController.isValidRookMove(piece);
       case '♘':
       case '♞':
-        return gameController.isValidKnightMove(piece, row, col);
+        return GameController.isValidKnightMove(piece);
       case '♗':
       case '♝':
-        return gameController.isValidBishopMove(piece, row, col);
+        return GameController.isValidBishopMove(piece);
       case '♕':
       case '♛':
-        return gameController.isValidQueenMove(piece, row, col)
+        return GameController.isValidQueenMove(piece)
       case '♔':
       case '♚':
-        return gameController.isValidKingMove(piece, row, col)
+        return GameController.isValidKingMove(piece)
       default:
         // Invalid move for other piece types (e.g., king, queen)
         return false;
     }
   }
 
-  // Define a function to check if a move is valid for a pawn
-  static isValidPawnMove(piece, row, col) {
-    const selectedRow = parseInt(piece.dataset.row);
-    const selectedCol = parseInt(piece.dataset.col);
-    const rowDiff = row - selectedRow;
-    const colDiff = col - selectedCol;
+  static isValidPawnMove(piece) {
+    const player_pos_row = parseInt(SELECTED_SQUARE.dataset.row);
+    const player_pos_col = parseInt(SELECTED_SQUARE.dataset.col);
 
-    console.log(rowDiff, colDiff)
-    console.log(gameController.canCapturePiece(piece, row, col))
+    const [next_pos_row, next_pos_col] = GameController.getCurrentClickedSquare();
 
-    if (piece.textContent === '♙') { // Move validations for the white pawn
-      if (gameController.canCapturePiece(piece, row, col)) {
-        if (rowDiff === -1 && Math.abs(colDiff) === 1) {
-          return true
-        }
-      } else {
-        if (rowDiff === -1 && colDiff === 0) {
-          // Valid move: Move one square forward.
-          return true
-        } else if (selectedRow === 6 && row === 4 && colDiff === 0) {
-          // Valid move for white pawn: Move two squares forward from starting position
-          return true;
-        } else {
-          // Invalid move
-          return false
-        }
-      }
-    } else if (piece.textContent === '♟') { // Move validations for the black pawn
-      if (rowDiff === 1 && colDiff === 0) {
-        // Valid move: Move one square forward.
-        return true
-      } else if (selectedRow === 1 && row === 3 && colDiff === 0) {
-        // Valid move for black pawn: Move two squares forward from starting position
-        return true;
-      } else {
-        // Invalid move
-        return false
-      }
-    } else {
-      // Invalid move
-      return false
-    }
-  }
+    console.log(piece)
 
-  // Define a function to check if a move is valid for a rook
-  static isValidRookMove(piece, row, col) {
-    const selectedRow = parseInt(piece.dataset.row);
-    const selectedCol = parseInt(piece.dataset.col);
-
-    if (row === selectedRow || col === selectedCol) {
-      // Valid move: Horizontal or vertical movement
-      return true;
-    } else {
-      // Invalid move
-      return false;
-    }
-  }
-
-  // Define a function to check if a move is valid for a knight
-  static isValidKnightMove(piece, row, col) {
-    const selectedRow = parseInt(piece.dataset.row);
-    const selectedCol = parseInt(piece.dataset.col);
-    const rowDiff = Math.abs(row - selectedRow);
-    const colDiff = Math.abs(col - selectedCol);
-
-    if ((rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2)) {
-      // Valid move: L-shaped movement
-      return true;
-    } else {
-      // Invalid move
-      return false;
-    }
-  }
-
-  // Define a function to check if a move is valid for a bishop
-  static isValidBishopMove(piece, row, col) {
-    const selectedRow = parseInt(piece.dataset.row);
-    const selectedCol = parseInt(piece.dataset.col);
-    const rowDiff = Math.abs(row - selectedRow);
-    const colDiff = Math.abs(col - selectedCol);
-
-    if (rowDiff === colDiff) {
-      // Valid move: Diagonal movement
-      return true;
-    } else {
-      // Invalid move
-      return false;
-    }
-  }
-
-
-  // Define a function to check if a move is valid for a king
-  static isValidKingMove(piece, row, col) {
-    const selectedRow = parseInt(piece.dataset.row);
-    const selectedCol = parseInt(piece.dataset.col);
-    const rowDiff = Math.abs(row - selectedRow);
-    const colDiff = Math.abs(col - selectedCol);
-
-    if ((Math.abs(rowDiff) === 1) || Math.abs(colDiff) === 1) 
-      return true
     return false
   }
 
-  // Define a function to check if a move is valid for a queen.
-  static isValidQueenMove(piece, row, col) {
-    const selectedRow = parseInt(piece.dataset.row);
-    const selectedCol = parseInt(piece.dataset.col);
-    const rowDiff = Math.abs(row - selectedRow);
-    const colDiff = Math.abs(col - selectedCol);
-
-    if (row === selectedRow || col === selectedCol || rowDiff === colDiff) {
-      // Valid move: Horizontal, vertical, or diagonal movement
-      return true;
-    } else {
-      // Invalid move
-      return false;
-    }
+  static isValidRookMove(piece) {
+    return false
   }
 
-  // Define a function to move a piece to a specific row and column
-  static movePiece(piece, newRow, newCol) {
-    // Get the destination square
-    const destinationSquare = document.querySelector(`[data-row="${newRow}"][data-col="${newCol}"]`)
-    const newDestination = document.createElement('span')
-    newDestination.classList.add('piece')
+  static isValidKnightMove(piece) {
+    return false
+  }
+  static isValidBishopMove(piece) {
+    return false
+  }
+  static isValidQueenMove(piece) { return false }
+  static isValidKingMove(piece) { return false }
 
-    // move the piece to the new square
-    newDestination.textContent = SELECTEDPIECES.textContent 
-    destinationSquare.appendChild(newDestination)
+  static getCurrentClickedSquare() {
+    const board = document.getElementById('chessboard')
+    const square = board.querySelector('.selected')
 
-    // Clear the content of the moved piece.
-    SELECTEDPIECES.textContent = '';
-    SELECTEDPIECES.classList.remove('selected')
-    SELECTEDPIECES = null;
-
-    // Update the current player (switch between white and black)
-    CURRENT_PLAYER = CURRENT_PLAYER === 'white' ? 'black' : 'white'
-  };
-
-  static canCapturePiece(piece, row, col) {
-    const targetPiece = piece
-    // console.log(piece, SELECTEDPIECES)
-
-    // console.log(targetPiece)
-
-    if (targetPiece) {
-      const targetColor = gameController.getPieceSymbol(targetPiece.textContent).split('.')[0]
-      const pieceColor = gameController.getPieceSymbol(SELECTEDPIECES.textContent).split('.')[0];
-
-      // console.log(targetColor, pieceColor)
-      // A piece can capture another piece if they have different colors (opponents)
-      return targetColor !== pieceColor;
-    }
-
-    return false; // No piece to capture
+    return [parseInt(square.dataset.row), parseInt(square.dataset.col)]
   }
 }
-
-// export default gameController;
-
-
-
-// if (piece) {
-//   // Check if the clicked piece belongs to the current player
-//   const pieceColor = piece.split('.')[0];
-//   if (PIECE_COLORS.includes(pieceColor)) {
-//     if (pieceColor === CURRENT_PLAYER) {
-//       // Check if the piece has already been moved (previously marked as moved)
-//       if (!gameController.isPieceMoved(clickedSquare)) {
-//         // Highlight the selected piece
-//         if (SELECTEDPIECES) {
-//           SELECTEDPIECES.classList.remove('selected');
-//         }
-//         SELECTEDPIECES = clickedSquare;
-//         SELECTEDPIECES.classList.add('selected');
-//       } else {
-//         console.log('This piece has already been moved');
-//       }
-//     } else {
-//       // Check for a valid Capture.
-//       if (SELECTEDPIECES !== null) {
-//         console.log('Check for posible capture');
-//         console.log(SELECTEDPIECES)
-//         console.log(piece)
-//         console.log('can capture', gameController.canCapturePiece(piece, row, col));
-//         console.log('can move',gameController.isValidMove(SELECTEDPIECES, row, col))
-
-//         // if (gameController.canCapturePiece(piece, row, col) && gameController.isValidMove(SELECTEDPIECES, row, col)) {
-//         //   // clear the targetsquare.
-//         //   const chessboard = document.getElementById('chessboard');
-//         //   const targetsquare = chessboard.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-//         //   targetsquare.textContent = '';
-          
-//         //   // console.log(piece)
-//         //   gameController.movePiece(piece, row, col);
-//         //   // SELECTEDPIECES = null;
-
-//         // } else {
-//         //   console.log('Invalid Move')
-//         // }
-//       } else {
-//         console.log('Select One of your Piece')
-//       }
-//     }
-//   } else {
-//     console.log('Here')
-//     // if (SELECTEDPIECES) {
-//     //   if (gameController.isValidMove(SELECTEDPIECES, row, col)) {
-//     //     gameController.movePiece(SELECTEDPIECES, row, col);
-//     //   } else {
-//     //     // Handle invalid move
-//     //     console.log('Invalid move');
-//     //   }
-//     // }
-//   }
-// } else {
-//   console.log('Check here')
-//   if (!SELECTEDPIECES) return
-
-//   if (gameController.isValidMove(SELECTEDPIECES, row, col)) {
-//     gameController.movePiece(SELECTEDPIECES, row, col)     
-//   }
-// }

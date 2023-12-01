@@ -2,5 +2,5 @@
 
 // Initialize the chessboard when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-  gameController.initializeChessboard();
+  GameController.initializeChessboard();
 });
